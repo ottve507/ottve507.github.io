@@ -1,0 +1,52 @@
+<head>
+   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+   <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+   
+   
+   <script type="text/javascript" src="script.js"></script>
+
+</head>
+
+<body style="background-color:rgb(240,240,245);">
+   <center>
+      <h1 style="color:rgb(100,100,100);">Corona development dashboard</h1>
+   </center>
+   <div id="container" style="padding:50px;">
+      
+	  <div class="row">
+         <div class="panel panel-default">
+            <center>
+               <h2>Development</h2>
+               <div id="canvas" style="width: 70%; height: 300px;"></div>
+               <br>
+               <div class="panel panel-primary" style="width: 40%;">
+                  <div class="panel-heading">What data do you want to see?</div>
+                  <div class="panel-body">
+                     <form>
+                        <input type="radio" name="country" value="all">&nbsp;All data &nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="country" value="fr">&nbsp;France&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="country" value="se">&nbsp;Sweden&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="country" value="it">&nbsp;Italy&nbsp;&nbsp;&nbsp;
+                     </form>
+                  </div>
+               </div>
+            </center>
+         </div>
+      </div>
+	  
+      <div class="row">
+         <div class="panel panel-default">
+            <center>
+               <h2>World overview</h2>
+               <br>
+               <div id="regions_div" style="width: 900px; height: 500px;"></div>
+            </center>
+         </div>
+      </div>
+	  
+   </div>
+</body>
