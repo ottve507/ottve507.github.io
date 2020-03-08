@@ -7,7 +7,4 @@ This project visualizes the corona virus outbreak with google charts using data 
 2. Open the index.html with your internet browser
 
 ### Other
-If the data becomes outdated, there is a copy of the CSV-file in this repository. Otherwise, it should be updated automatically.
-
-
-![Screenshot of dashboard](https://github.com/ottve507/Corona-Virus-Dashboard/blob/master/Screenshot%20of%20project.png?raw=true)
+If the data becomes outdated, there is a copy of the CSV-file in this repository.
