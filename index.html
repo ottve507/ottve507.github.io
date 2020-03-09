@@ -16,7 +16,6 @@
    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-   <link rel="stylesheet" href="table.css">
    
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -38,21 +37,31 @@
 	  <div class="row">
          <div class="panel panel-default">
             <center>
-               <h2>Development</h2>
-               <div id="canvas" style="width: 70%; height: 300px;"></div>
+               <h2> Number of infected</h2>
+ 			   <b>Total infected:</b><p id="totalNumbers" style ="white-space: nowrap;"></p><b> change from yesterday: </b><p id="changeYesterday" style ="white-space: nowrap;"></p>
+			   
+			   
+			   
+			   
+               <div id="canvas" style="width: 85%; height: 300px;"></div>
                <br>
-               <div class="panel panel-primary" style="width: 40%;">
-                  <div class="panel-heading">What data do you want to see?</div>
-                  <div class="panel-body">
-                     <form>
-                        <input type="radio" name="country" value="all">&nbsp;All data &nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="country" value="fr">&nbsp;France&nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="country" value="se">&nbsp;Sweden&nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="country" value="it">&nbsp;Italy&nbsp;&nbsp;&nbsp;
-                     </form>
-                  </div>
-               </div>
+  
+					  <select id="mySelect">
+					    <option name="country" value="all">Favorites</option>
+						<option name="country" value="cn_n">China</option>
+						<option name="country" value="dk">Denmark</option>
+						<option name="country" value="fi">Finland</option>
+						<option name="country" value="fr">France</option>
+						<option name="country" value="it">Italy</option>
+						<option name="country" value="jp">Japan</option>
+						<option name="country" value="no">Norway</option>
+						<option name="country" value="sk">South Korea</option>
+						<option name="country" value="se">Sweden</option>
+						<option name="country" value="ch">Switzerland</option>
+						<option name="country" value="us_n">United States</option>
+					  </select>
             </center>
+			<br>
          </div>
       </div>
 	  

@@ -68,24 +68,13 @@ function continue_visualization(country_totals) {
             onParseValue: $.csv.hooks.castToScalar
         });
 
+        console.log(country_totals);
 
         //Setup empty help-array (transforming raw data)
         var all = [];
         var fr = [];
         var se = [];
         var it = [];
-		var sk = [];
-		var jp = [];
-		var us = new Array(arrayData[0].length-4).fill(0);
-		var us_n = [];
-		var dk = [];
-		var cn = new Array(arrayData[0].length-4).fill(0);
-		var cn_n = [];
-		var ch = [];
-		var no = [];
-		var fi = [];
-		var totalInfected = 0.00;
-		var totalInfectedYesterday = 0.00;
 
 
         //Loop through data in order to clean the data and creating different data sets
@@ -105,51 +94,15 @@ function continue_visualization(country_totals) {
                 se.push(country.concat(days));
                 it.push(country.concat(days));
                 fr.push(country.concat(days));
-				cn_n.push(country.concat(days));
-				us_n.push(country.concat(days));
-				sk.push(country.concat(days));
-				jp.push(country.concat(days));
-				dk.push(country.concat(days));
-				ch.push(country.concat(days));
-				no.push(country.concat(days));
-				fi.push(country.concat(days));
             } else if (country[0] == "France") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 all.push(country.concat(days));
                 fr.push(country.concat(days));
             } else if (country[0] == "Italy") {
                 days = arrayData[i].slice(4, arrayData[i].length);
+                all.push(country.concat(days));
                 it.push(country.concat(days));
-            } else if (country[0] == "Mainland China") {
-                days = arrayData[i].slice(5, arrayData[i].length);
-				for (var j = 0; j < cn.length; j++) {
-					cn[j] = cn[j] + days[j];
-				}
-            } else if (country[0] == "US") {
-                days = arrayData[i].slice(5, arrayData[i].length);
-				for (var j = 0; j < us.length; j++) {
-					us[j] = us[j] + days[j];
-				}
-            } else if (country[0] == "South Korea") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                sk.push(country.concat(days));
-            } else if (country[0] == "Japan") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                jp.push(country.concat(days));
-            } else if (country[0] == "Denmark") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                dk.push(country.concat(days));
-            } else if (country[0] == "Switzerland") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                ch.push(country.concat(days));
-            } else if (country[0] == "Norway") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                no.push(country.concat(days));
-            } else if (country[0] == "Finland") {
-                days = arrayData[i].slice(4, arrayData[i].length);
-                fi.push(country.concat(days));
             }
-			
 
             //Creating the "total infected" per country. Some countries have multiple entries, so I had to add them up.
             if (i != 0) {
@@ -161,37 +114,15 @@ function continue_visualization(country_totals) {
                 } else {
                     country_totals[country[0]]["casesToday"] += parseInt(arrayData[i].slice(arrayData[i].length - 1, arrayData[i].length));
                 }
-				totalInfected += parseInt(arrayData[i].slice(arrayData[i].length - 1, arrayData[i].length))
-				totalInfectedYesterday += parseInt(arrayData[i].slice(arrayData[i].length - 2, arrayData[i].length-1))
             }
         }
-		
-		document.getElementById('totalNumbers').innerHTML = numberWithSpaces(totalInfected)
-		document.getElementById('changeYesterday').innerHTML = ((totalInfected/totalInfectedYesterday-1)*100).toFixed(1) + "%";
-		
 
-        //The data needs to be transposed in order to be plotted on a line graph
-		cn_n.push(["China"].concat(cn));
-		us_n.push(["US"].concat(us));
-		
-		console.log(us_n)
-		console.log(cn_n)
-		
-		
         //The data needs to be transposed in order to be plotted on a line graph
         all = all[0].map((col, i) => all.map(row => row[i]));
         se = se[0].map((col, i) => se.map(row => row[i]));
         fr = fr[0].map((col, i) => fr.map(row => row[i]));
         it = it[0].map((col, i) => it.map(row => row[i]));
-		cn_n = cn_n[0].map((col, i) => cn_n.map(row => row[i]));
-		us_n = us_n[0].map((col, i) => us_n.map(row => row[i]));
-		sk = sk[0].map((col, i) => sk.map(row => row[i]));
-		jp = jp[0].map((col, i) => jp.map(row => row[i]));
-		dk = dk[0].map((col, i) => dk.map(row => row[i]));
-		ch = ch[0].map((col, i) => ch.map(row => row[i]));
-		no = no[0].map((col, i) => no.map(row => row[i]));
-		fi = fi[0].map((col, i) => fi.map(row => row[i]));
-		
+
         country_totals['China']['casesToday'] = country_totals['Mainland China']['casesToday']
         country_totals['United Kingdom']['casesToday'] = country_totals['UK']['casesToday']
 
@@ -218,75 +149,34 @@ function continue_visualization(country_totals) {
         var data = new google.visualization.arrayToDataTable(all);
         var chart = new google.visualization.LineChart(document.getElementById('canvas'));
         chart.draw(data, options_line);
-		
-		var mySelect = document.getElementById('mySelect');
 
-		mySelect.onchange = function() {
-		   var x = document.getElementById("mySelect").value;
-           switch (x) {
-               case 'all':
-                   var data = new google.visualization.arrayToDataTable(all);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'it':
-                   var data = new google.visualization.arrayToDataTable(it);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'fr':
-                   var data = new google.visualization.arrayToDataTable(fr);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'se':
-                   var data = new google.visualization.arrayToDataTable(se);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'sk':
-                   var data = new google.visualization.arrayToDataTable(sk);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'cn_n':
-                   var data = new google.visualization.arrayToDataTable(cn_n);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'us_n':
-                   var data = new google.visualization.arrayToDataTable(us_n);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'jp':
-                   var data = new google.visualization.arrayToDataTable(jp);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'dk':
-                   var data = new google.visualization.arrayToDataTable(dk);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'ch':
-                   var data = new google.visualization.arrayToDataTable(ch);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'no':
-                   var data = new google.visualization.arrayToDataTable(no);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-               case 'fi':
-                   var data = new google.visualization.arrayToDataTable(fi);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
-                   break;
-			   }
-			   
-		 }
+        ///Listening to what happens with radio buttons
+        $('input[type=radio][name=country]').on('change', function() {
+            switch ($(this).val()) {
+                case 'all':
+                    var data = new google.visualization.arrayToDataTable(all);
+                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                    chart.draw(data, options_line);
+                    break;
+                case 'it':
+                    var data = new google.visualization.arrayToDataTable(it);
+                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                    chart.draw(data, options_line);
+                    break;
+
+                case 'fr':
+                    var data = new google.visualization.arrayToDataTable(fr);
+                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                    chart.draw(data, options_line);
+                    break;
+
+                case 'se':
+                    var data = new google.visualization.arrayToDataTable(se);
+                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                    chart.draw(data, options_line);
+                    break;
+            }
+        });
 
         //Draw geograph
         var options_geograph = {
