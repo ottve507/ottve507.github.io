@@ -11,24 +11,24 @@ function addRow(country,population, number_of_cases)
 {
          if (!document.getElementsByTagName) return;
          
-		 tabBody=document.getElementsByTagName("tbody").item(0);
+	 tabBody=document.getElementsByTagName("tbody").item(0);
          row=document.createElement("tr");
          cell1 = document.createElement("td");
          cell2 = document.createElement("td");
-		 cell3 = document.createElement("td");
-		 cell4 = document.createElement("td");
+	 cell3 = document.createElement("td");
+	 cell4 = document.createElement("td");
          textnode1=document.createTextNode(country);
          textnode2=document.createTextNode(numberWithSpaces(population));
-		 textnode3=document.createTextNode(numberWithSpaces(number_of_cases));
-		 textnode4=document.createTextNode(((parseInt(number_of_cases)/ population)*100000).toFixed(3));
+	 textnode3=document.createTextNode(numberWithSpaces(number_of_cases));
+	 textnode4=document.createTextNode(((parseInt(number_of_cases)/ population)*100000).toFixed(3));
          cell1.appendChild(textnode1);
          cell2.appendChild(textnode2);
-		 cell3.appendChild(textnode3);
-		 cell4.appendChild(textnode4);
+	 cell3.appendChild(textnode3);
+	 cell4.appendChild(textnode4);
          row.appendChild(cell1);
          row.appendChild(cell2);
-		 row.appendChild(cell3);
-		 row.appendChild(cell4);
+	 row.appendChild(cell3);
+	 row.appendChild(cell4);
          tabBody.appendChild(row);
 }
 
@@ -54,7 +54,6 @@ function startVisualization(){
 }
 
 
-
 //Function to draw different charts
 function continue_visualization(country_totals) {
 
@@ -66,7 +65,7 @@ function continue_visualization(country_totals) {
             onParseValue: $.csv.hooks.castToScalar
         });
 		
-		console.log(country_totals);
+	console.log(country_totals);
 
         //Setup empty help-array (transforming raw data)
         var all = [];
@@ -81,7 +80,7 @@ function continue_visualization(country_totals) {
             //Get the country column from CSV file
             country = arrayData[i].slice(1, 2)
 			
-			//Populating subsets
+	   //Populating subsets
             if (country[0] == "Sweden") {
                 days = arrayData[i].slice(4, arrayData[i].length); //Taking number of infected for that day
                 all.push(country.concat(days)); //Adding data to data set
@@ -156,7 +155,6 @@ function continue_visualization(country_totals) {
                     var data = new google.visualization.arrayToDataTable(it);
                     var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                     chart.draw(data, options_line);
-		    alert("Hej");
                     break;
 
                 case 'fr':
