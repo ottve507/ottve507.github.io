@@ -176,6 +176,7 @@ function continue_visualization(country_totals) {
                     var data = new google.visualization.arrayToDataTable(it);
                     var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                     chart.draw(data, options_line);
+		    alert("Hej");
                     break;
 
                 case 'fr':
