@@ -131,40 +131,20 @@ function continue_visualization(country_totals) {
         var geodata = google.visualization.arrayToDataTable(geoArray); //Now the data has been loaded for map.
 
         //Draw line chart
-		var options_line = {
-			lineWidth: 2,
-			pointSize: 5,
-			animation:{
-			        startup: true,
-			        duration: 1200,
-			        easing: 'in'
-			      }
-		};
+	var options_line = {
+		lineWidth: 2,
+		pointSize: 5,
+		animation:{
+		        startup: true,
+		        duration: 1200,
+		        easing: 'in'
+		      }
+	};
         var data = new google.visualization.arrayToDataTable(all);
         var chart = new google.visualization.LineChart(document.getElementById('canvas'));
         chart.draw(data, options_line);
-
-        //Draw geograph
-		var options_geograph = {colorAxis: {colors: ['orange', 'red']}}
-        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
-        chart.draw(geodata, options_geograph);
-		
-		//Populate table, but first delete wierd countries
-		delete country_totals['Mainland China'];
-		delete country_totals['UK'];
-		delete country_totals['Others'];
-		delete country_totals['Vatican City'];
-		delete country_totals['Macau'];
-		delete country_totals['Monaco'];
-		delete country_totals['San Marino'];
-		delete country_totals['Saint Barthelemy'];
-		
-		
-        for (const [key, value] of Object.entries(country_totals)) {
-			addRow(key,value["population"], value["casesToday"])
-        }
-		
-        ///Listening to what happens with radio buttons
+	    
+	///Listening to what happens with radio buttons
         $('input[type=radio][name=country]').on('change', function() {
             switch ($(this).val()) {
                 case 'all':
@@ -192,6 +172,27 @@ function continue_visualization(country_totals) {
                     break;
             }
         });
+	    
+        //Draw geograph
+	var options_geograph = {colorAxis: {colors: ['orange', 'red']}}
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+        chart.draw(geodata, options_geograph);
+		
+		//Populate table, but first delete wierd countries
+		delete country_totals['Mainland China'];
+		delete country_totals['UK'];
+		delete country_totals['Others'];
+		delete country_totals['Vatican City'];
+		delete country_totals['Macau'];
+		delete country_totals['Monaco'];
+		delete country_totals['San Marino'];
+		delete country_totals['Saint Barthelemy'];
+		
+		
+        for (const [key, value] of Object.entries(country_totals)) {
+			addRow(key,value["population"], value["casesToday"])
+        }
+	
     });
 }
 
