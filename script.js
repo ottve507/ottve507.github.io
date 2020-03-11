@@ -84,6 +84,7 @@ function continue_visualization(country_totals) {
 		var ch = [];
 		var no = [];
 		var fi = [];
+		var de = [];
 		var totalInfected = 0.00;
 		var totalInfectedYesterday = 0.00;
 
@@ -113,6 +114,7 @@ function continue_visualization(country_totals) {
 				ch.push(country.concat(days));
 				no.push(country.concat(days));
 				fi.push(country.concat(days));
+				de.push(country.concat(days));
             } else if (country[0] == "France") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 all.push(country.concat(days));
@@ -148,6 +150,9 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Finland") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 fi.push(country.concat(days));
+            } else if (country[0] == "Germany") {
+                days = arrayData[i].slice(4, arrayData[i].length);
+                de.push(country.concat(days));
             }
 			
 
@@ -157,7 +162,6 @@ function continue_visualization(country_totals) {
                     country_totals[country[0]] = {
                         casesToday: parseInt(arrayData[i].slice(arrayData[i].length - 1, arrayData[i].length))
                     };
-                    //country_totals[country[0]] = parseInt(arrayData[i].slice(arrayData[i].length - 1, arrayData[i].length));
                 } else {
                     country_totals[country[0]]["casesToday"] += parseInt(arrayData[i].slice(arrayData[i].length - 1, arrayData[i].length));
                 }
@@ -191,19 +195,40 @@ function continue_visualization(country_totals) {
 		ch = ch[0].map((col, i) => ch.map(row => row[i]));
 		no = no[0].map((col, i) => no.map(row => row[i]));
 		fi = fi[0].map((col, i) => fi.map(row => row[i]));
+		de = de[0].map((col, i) => de.map(row => row[i]));
 		
         country_totals['China']['casesToday'] = country_totals['Mainland China']['casesToday']
         country_totals['United Kingdom']['casesToday'] = country_totals['UK']['casesToday']
+		country_totals['Iran']['casesToday'] = country_totals['Iran (Islamic Republic of)']['casesToday']
 		country_totals['South Korea']['casesToday'] = country_totals['Republic of Korea']['casesToday']
+		country_totals['Russia']['casesToday'] = country_totals['Russian Federation']['casesToday']
 
         //Prepare data for world map (some data have wrong country name)
         geoArray = [
-            ['Country', 'Infected']
+            ['Country', 'Infected per 100 000', 'Infected']
         ] // Headers 
         for (const [key, value] of Object.entries(country_totals)) {
-            geoArray.push([key, value["casesToday"]])
+			try {
+			  geoArray.push([key, 100000*(parseInt(value["casesToday"])/value["population"]), value["casesToday"]])
+			}
+			catch(err) {
+			  geoArray.push([key, 0])
+			}
         }
-
+		
+		for (var i = 0; i < geoArray.length; i++) {
+			geoArray[i][0] = geoArray[i][0] || 0
+			geoArray[i][1] = geoArray[i][1] || 0
+			if (geoArray[i][0] == "Others") {
+				geoArray[i][1] = geoArray[i][1] = 0
+			} else if (geoArray[i][0] == "San Marino") {
+				geoArray[i][1] = geoArray[i][1] = 0
+			}
+		}
+		
+		
+	    //document.getElementById("container").innerHTML = geoArray;
+		
         var geodata = google.visualization.arrayToDataTable(geoArray); //Now the data has been loaded for map.
 
         //Draw line chart
@@ -285,6 +310,11 @@ function continue_visualization(country_totals) {
                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                    chart.draw(data, options_line);
                    break;
+               case 'de':
+                   var data = new google.visualization.arrayToDataTable(de);
+                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                   chart.draw(data, options_line);
+                   break;
 			   }
 			   
 		 }
@@ -293,7 +323,8 @@ function continue_visualization(country_totals) {
         var options_geograph = {
             colorAxis: {
                 colors: ['orange', 'red']
-            }
+            },
+			sizeAxis: {minValue: 2, maxValue: 20}
         }
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
         chart.draw(geodata, options_geograph);
