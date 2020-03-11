@@ -130,7 +130,7 @@ function continue_visualization(country_totals) {
 				for (var j = 0; j < us.length; j++) {
 					us[j] = us[j] + days[j];
 				}
-            } else if (country[0] == "South Korea") {
+            } else if (country[0] == "Republic of Korea") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 sk.push(country.concat(days));
             } else if (country[0] == "Japan") {
@@ -194,6 +194,7 @@ function continue_visualization(country_totals) {
 		
         country_totals['China']['casesToday'] = country_totals['Mainland China']['casesToday']
         country_totals['United Kingdom']['casesToday'] = country_totals['UK']['casesToday']
+		country_totals['South Korea']['casesToday'] = country_totals['Republic of Korea']['casesToday']
 
         //Prepare data for world map (some data have wrong country name)
         geoArray = [
