@@ -79,7 +79,8 @@ function continue_visualization(country_totals) {
 		var jp = [];
 		var us = new Array(arrayData[0].length-4).fill(0);
 		var us_n = [];
-		var dk = [];
+		var dk = new Array(arrayData[0].length-4).fill(0);
+		var dk_n = [];
 		var cn = new Array(arrayData[0].length-4).fill(0);
 		var cn_n = [];
 		var ch = [];
@@ -112,7 +113,7 @@ function continue_visualization(country_totals) {
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
 				jp.push(country.concat(days));
-				dk.push(country.concat(days));
+				dk_n.push(country.concat(days));
 				ch.push(country.concat(days));
 				no.push(country.concat(days));
 				fi.push(country.concat(days));
@@ -144,7 +145,9 @@ function continue_visualization(country_totals) {
                 jp.push(country.concat(days));
             } else if (country[0] == "Denmark") {
                 days = arrayData[i].slice(4, arrayData[i].length);
-                dk.push(country.concat(days));
+				for (var j = 0; j < dk.length; j++) {
+					dk[j] = dk[j] + days[j];
+				}
             } else if (country[0] == "Switzerland") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 ch.push(country.concat(days));
@@ -185,6 +188,7 @@ function continue_visualization(country_totals) {
 		cn_n.push(["China"].concat(cn));
 		us_n.push(["US"].concat(us));
 		fr_n.push(["France"].concat(fr));
+		dk_n.push(["Denmark"].concat(dk));
 		
 		all.push(["France"].concat(fr));
         
@@ -197,7 +201,7 @@ function continue_visualization(country_totals) {
 		us_n = us_n[0].map((col, i) => us_n.map(row => row[i]));
 		sk = sk[0].map((col, i) => sk.map(row => row[i]));
 		jp = jp[0].map((col, i) => jp.map(row => row[i]));
-		dk = dk[0].map((col, i) => dk.map(row => row[i]));
+		dk_n = dk_n[0].map((col, i) => dk_n.map(row => row[i]));
 		ch = ch[0].map((col, i) => ch.map(row => row[i]));
 		no = no[0].map((col, i) => no.map(row => row[i]));
 		fi = fi[0].map((col, i) => fi.map(row => row[i]));
@@ -301,7 +305,7 @@ function continue_visualization(country_totals) {
                    chart.draw(data, options_line);
                    break;
                case 'dk':
-                   var data = new google.visualization.arrayToDataTable(dk);
+                   var data = new google.visualization.arrayToDataTable(dk_n);
                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                    chart.draw(data, options_line);
                    break;
