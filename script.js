@@ -71,7 +71,8 @@ function continue_visualization(country_totals) {
 
         //Setup empty help-array (transforming raw data)
         var all = [];
-        var fr = [];
+        var fr = new Array(arrayData[0].length-4).fill(0);
+        var fr_n = [];
         var se = [];
         var it = [];
 		var sk = [];
@@ -85,6 +86,7 @@ function continue_visualization(country_totals) {
 		var no = [];
 		var fi = [];
 		var de = [];
+		var es = [];
 		var totalInfected = 0.00;
 		var totalInfectedYesterday = 0.00;
 
@@ -105,7 +107,7 @@ function continue_visualization(country_totals) {
                 all.push(country.concat(days));
                 se.push(country.concat(days));
                 it.push(country.concat(days));
-                fr.push(country.concat(days));
+                fr_n.push(country.concat(days));
 				cn_n.push(country.concat(days));
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
@@ -115,10 +117,12 @@ function continue_visualization(country_totals) {
 				no.push(country.concat(days));
 				fi.push(country.concat(days));
 				de.push(country.concat(days));
+				es.push(country.concat(days));
             } else if (country[0] == "France") {
                 days = arrayData[i].slice(4, arrayData[i].length);
-                all.push(country.concat(days));
-                fr.push(country.concat(days));
+				for (var j = 0; j < fr.length; j++) {
+					fr[j] = fr[j] + days[j];
+				}
             } else if (country[0] == "Italy") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 it.push(country.concat(days));
@@ -132,7 +136,7 @@ function continue_visualization(country_totals) {
 				for (var j = 0; j < us.length; j++) {
 					us[j] = us[j] + days[j];
 				}
-            } else if (country[0] == "Republic of Korea") {
+            } else if (country[0] == "Korea, South") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 sk.push(country.concat(days));
             } else if (country[0] == "Japan") {
@@ -153,6 +157,9 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Germany") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 de.push(country.concat(days));
+            } else if (country[0] == "Spain") {
+                days = arrayData[i].slice(4, arrayData[i].length);
+                es.push(country.concat(days));
             }
 			
 
@@ -177,15 +184,14 @@ function continue_visualization(country_totals) {
         //The data needs to be transposed in order to be plotted on a line graph
 		cn_n.push(["China"].concat(cn));
 		us_n.push(["US"].concat(us));
+		fr_n.push(["France"].concat(fr));
 		
-		console.log(us_n)
-		console.log(cn_n)
-		
-		
+		all.push(["France"].concat(fr));
+        
         //The data needs to be transposed in order to be plotted on a line graph
         all = all[0].map((col, i) => all.map(row => row[i]));
         se = se[0].map((col, i) => se.map(row => row[i]));
-        fr = fr[0].map((col, i) => fr.map(row => row[i]));
+        fr_n = fr_n[0].map((col, i) => fr_n.map(row => row[i]));
         it = it[0].map((col, i) => it.map(row => row[i]));
 		cn_n = cn_n[0].map((col, i) => cn_n.map(row => row[i]));
 		us_n = us_n[0].map((col, i) => us_n.map(row => row[i]));
@@ -196,12 +202,15 @@ function continue_visualization(country_totals) {
 		no = no[0].map((col, i) => no.map(row => row[i]));
 		fi = fi[0].map((col, i) => fi.map(row => row[i]));
 		de = de[0].map((col, i) => de.map(row => row[i]));
+		es = es[0].map((col, i) => es.map(row => row[i]));
+		
+		
+		//document.getElementById("container").innerHTML = fr_n;
 		
         country_totals['China']['casesToday'] = country_totals['Mainland China']['casesToday']
-        country_totals['United Kingdom']['casesToday'] = country_totals['UK']['casesToday']
-		country_totals['Iran']['casesToday'] = country_totals['Iran (Islamic Republic of)']['casesToday']
-		country_totals['South Korea']['casesToday'] = country_totals['Republic of Korea']['casesToday']
-		country_totals['Russia']['casesToday'] = country_totals['Russian Federation']['casesToday']
+        country_totals['United Kingdom']['casesToday'] = country_totals['United Kingdom']['casesToday']
+		country_totals['South Korea']['casesToday'] = country_totals['Korea, South']['casesToday']
+		//country_totals['Russia']['casesToday'] = country_totals['Russian Federation']['casesToday']
 
         //Prepare data for world map (some data have wrong country name)
         geoArray = [
@@ -261,7 +270,8 @@ function continue_visualization(country_totals) {
                    chart.draw(data, options_line);
                    break;
                case 'fr':
-                   var data = new google.visualization.arrayToDataTable(fr);
+                   var data = new google.visualization.arrayToDataTable(fr_n);
+				   console.log(fr_n)
                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                    chart.draw(data, options_line);
                    break;
@@ -312,6 +322,11 @@ function continue_visualization(country_totals) {
                    break;
                case 'de':
                    var data = new google.visualization.arrayToDataTable(de);
+                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
+                   chart.draw(data, options_line);
+                   break;
+               case 'es':
+                   var data = new google.visualization.arrayToDataTable(es);
                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                    chart.draw(data, options_line);
                    break;
