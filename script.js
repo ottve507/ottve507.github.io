@@ -71,17 +71,17 @@ function continue_visualization(country_totals) {
 
         //Setup empty help-array (transforming raw data)
         var all = [];
-        var fr = new Array(arrayData[0].length-4).fill(0);
+        var fr = new Array(arrayData[0].length-3).fill(0);
         var fr_n = [];
         var se = [];
         var it = [];
 		var sk = [];
 		var jp = [];
-		var us = new Array(arrayData[0].length-4).fill(0);
+		var us = new Array(arrayData[0].length-3).fill(0);
 		var us_n = [];
-		var dk = new Array(arrayData[0].length-4).fill(0);
+		var dk = new Array(arrayData[0].length-3).fill(0);
 		var dk_n = [];
-		var cn = new Array(arrayData[0].length-4).fill(0);
+		var cn = new Array(arrayData[0].length-3).fill(0);
 		var cn_n = [];
 		var ch = [];
 		var no = [];
@@ -127,13 +127,13 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Italy") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 it.push(country.concat(days));
-            } else if (country[0] == "Mainland China") {
-                days = arrayData[i].slice(5, arrayData[i].length);
+            } else if (country[0] == "China") {
+                days = arrayData[i].slice(4, arrayData[i].length);
 				for (var j = 0; j < cn.length; j++) {
 					cn[j] = cn[j] + days[j];
 				}
             } else if (country[0] == "US") {
-                days = arrayData[i].slice(5, arrayData[i].length);
+                days = arrayData[i].slice(4, arrayData[i].length);
 				for (var j = 0; j < us.length; j++) {
 					us[j] = us[j] + days[j];
 				}
@@ -180,8 +180,12 @@ function continue_visualization(country_totals) {
             }
         }
 		
-		document.getElementById('totalNumbers').innerHTML = numberWithSpaces(totalInfected)
-		document.getElementById('changeYesterday').innerHTML = ((totalInfected/totalInfectedYesterday-1)*100).toFixed(1) + "%";
+		console.log(us_n)
+		
+		document.getElementById("totalNumbers").innerHTML = '<b>Total infected in the world: </b>' + '<p style="color: red; display: inline;"> ' +  numberWithSpaces(totalInfected).toString() + ' </p> <b>&nbsp&nbsp Percentage increase from yesterday: </b>' + ((totalInfected/totalInfectedYesterday-1)*100).toFixed(1).toString() + "%";;
+		
+		//document.getElementById('totalNumbers').innerHTML = 
+		//document.getElementById('changeYesterday').innerHTML = ((totalInfected/totalInfectedYesterday-1)*100).toFixed(1) + "%";
 		
 
         //The data needs to be transposed in order to be plotted on a line graph
@@ -211,10 +215,11 @@ function continue_visualization(country_totals) {
 		
 		//document.getElementById("container").innerHTML = fr_n;
 		
-        country_totals['China']['casesToday'] = country_totals['Mainland China']['casesToday']
+        country_totals['China']['casesToday'] = country_totals['China']['casesToday']
         country_totals['United Kingdom']['casesToday'] = country_totals['United Kingdom']['casesToday']
 		country_totals['South Korea']['casesToday'] = country_totals['Korea, South']['casesToday']
-		//country_totals['Russia']['casesToday'] = country_totals['Russian Federation']['casesToday']
+		country_totals['Czech Republic']['casesToday'] = country_totals['Czechia']['casesToday']
+		country_totals['Taiwan']['casesToday'] = country_totals['Taiwan*']['casesToday']
 
         //Prepare data for world map (some data have wrong country name)
         geoArray = [
@@ -267,72 +272,48 @@ function continue_visualization(country_totals) {
                    var data = new google.visualization.arrayToDataTable(all);
                    var chart = new google.visualization.LineChart(document.getElementById('canvas'));
                    chart.draw(data, options_line);
+		 		  document.getElementById("learn-more").innerHTML = '';
+				  document.getElementById("growth-factor").innerHTML = '';
+				   
                    break;
                case 'it':
-                   var data = new google.visualization.arrayToDataTable(it);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(it, options_line);				   
                    break;
                case 'fr':
-                   var data = new google.visualization.arrayToDataTable(fr_n);
-				   console.log(fr_n)
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(fr_n, options_line);				   
                    break;
                case 'se':
-                   var data = new google.visualization.arrayToDataTable(se);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(se, options_line);				   
                    break;
                case 'sk':
-                   var data = new google.visualization.arrayToDataTable(sk);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(sk, options_line);				   
                    break;
                case 'cn_n':
-                   var data = new google.visualization.arrayToDataTable(cn_n);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(cn_n, options_line);				   
                    break;
                case 'us_n':
-                   var data = new google.visualization.arrayToDataTable(us_n);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(us_n, options_line);				   
                    break;
                case 'jp':
-                   var data = new google.visualization.arrayToDataTable(jp);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(jp, options_line);				   
                    break;
                case 'dk':
-                   var data = new google.visualization.arrayToDataTable(dk_n);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(dk_n, options_line);				   
                    break;
                case 'ch':
-                   var data = new google.visualization.arrayToDataTable(ch);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(ch, options_line);				   
                    break;
                case 'no':
-                   var data = new google.visualization.arrayToDataTable(no);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(no, options_line);				   
                    break;
                case 'fi':
-                   var data = new google.visualization.arrayToDataTable(fi);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(fi, options_line);				   
                    break;
                case 'de':
-                   var data = new google.visualization.arrayToDataTable(de);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(de, options_line);				   
                    break;
                case 'es':
-                   var data = new google.visualization.arrayToDataTable(es);
-                   var chart = new google.visualization.LineChart(document.getElementById('canvas'));
-                   chart.draw(data, options_line);
+				   drawCanvas(es, options_line);				   
                    break;
 			   }
 			   

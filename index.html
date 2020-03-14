@@ -22,15 +22,18 @@
    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
    
    
+   <script type="text/javascript" src="draw-canvas.js"></script>
    <script type="text/javascript" src="script.js"></script>
    <script type="text/javascript" src="sort-table.js"></script>
    <script type="text/javascript" src="number_formatting.js"></script>
+   
 
 </head>
 
 <body style="background-color:rgb(240,240,245);">
    <center>
       <h1 style="color:rgb(100,100,100);">Corona development dashboard</h1>
+	  <h3 style="color:rgb(100,100,100);">Data provided from <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins</a>. Data updated once per day.</h3>
    </center>
    <div id="container" style="padding:50px;">
       
@@ -38,14 +41,15 @@
          <div class="panel panel-default">
             <center>
                <h2> Number of infected</h2>
- 			   <b>Total infected:</b><p id="totalNumbers" style ="white-space: nowrap;"></p><b> change from yesterday: </b><p id="changeYesterday" style ="white-space: nowrap;"></p>
+ 			  	<p id="totalNumbers" style ="white-space: nowrap;"></p>
 			   
 			   
 			   
 			   
                <div id="canvas" style="width: 85%; height: 300px;"></div>
+			   <div id="growth-factor"></div><div id="learn-more"></div>
+			   
                <br>
-  
 					  <select id="mySelect">
 					    <option name="country" value="all">Favorites</option>
 						<option name="country" value="cn_n">China</option>
