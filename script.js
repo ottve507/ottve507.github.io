@@ -61,7 +61,7 @@ function startVisualization() {
 function continue_visualization(country_totals) {
 
     //Getting CSV-file about Corona virus (change to local CSV if offline)
-    $.get("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv", function(csv_in) {
+    $.get("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv", function(csv_in) {
 
         //Parsing John Hopkins' CSV to array
         var arrayData = $.csv.toArrays(csv_in, {
