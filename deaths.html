@@ -23,7 +23,7 @@
    
    
    <script type="text/javascript" src="draw-canvas.js"></script>
-   <script type="text/javascript" src="script.js"></script>
+   <script type="text/javascript" src="deaths.js"></script>
    <script type="text/javascript" src="sort-table.js"></script>
    <script type="text/javascript" src="number_formatting.js"></script>
    
@@ -38,16 +38,19 @@
 		</center>
 </nav>
 
-<body style="background-color:rgb(240,240,245);">
+
+
+
+<body style="background-color:rgb(80,80,80);">
    <center>
-	  <h3 style="color:rgb(100,100,100);">Data provided from <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins</a>. Data updated once per day.</h3>
+	  <h3 style="color:white;">Data provided from <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins</a>. Data updated once per day.</h3>
    </center>
    <div id="container" style="padding:50px;">
       
 	  <div class="row">
          <div class="panel panel-default">
             <center>
-               <h2> Number of infected</h2>
+               <h2>Number of deceased persons</h2>
  			  	<p id="totalNumbers" style ="white-space: nowrap;"></p>
 			   
 			   
@@ -58,7 +61,7 @@
 			   
                <br>
 					  <select id="mySelect">
-					    <option name="country" value="all">Favorites</option>
+					    <option name="country" value="all">France and Sweden</option>
 						<option name="country" value="be">Belgium</option>
 						<option name="country" value="cn_n">China</option>
 						  
@@ -96,8 +99,9 @@
 					  <tr>
 					  <th><a href="javascript:SortTable(0,'T');">Country ▼</a></th>
 					  <th><a href="javascript:SortTable(1,'N');">Population ▼</a></th>
-					  <th><a href="javascript:SortTable(2,'N');">Cases ▼</a></th>
-					  <th><a href="javascript:SortTable(3,'N');">Cases per 100 000 inhabitants ▼</a></th>
+					  <th><a href="javascript:SortTable(2,'N');">Deaths ▼</a></th>
+					  <th><a href="javascript:SortTable(3,'N');">Deaths per 100 000 inhabitants ▼</a></th>
+					  <th><a href="javascript:SortTable(3,'N');">Number of infected 2 weeks ago <br>(given a mortality rate of 2%) ▼</a></th>
 				  	  </tr>
 				  </thead>
 				  <tbody>
