@@ -80,6 +80,7 @@ function continue_visualization(country_totals) {
         var se = [];
         var it = [];
 	var be = [];
+	var sa = [];
 		var sk = [];
 		var jp = [];
 		var us = new Array(arrayData[0].length-3).fill(0);
@@ -115,6 +116,7 @@ function continue_visualization(country_totals) {
                 it.push(country.concat(days));
                 fr_n.push(country.concat(days));
 		be.push(country.concat(days));
+		sa.push(country.concat(days));
 				cn_n.push(country.concat(days));
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
@@ -133,6 +135,9 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Italy") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 it.push(country.concat(days));
+	    } else if (country[0] == "South Africa") {
+                days = arrayData[i].slice(4, arrayData[i].length);
+                sa.push(country.concat(days));
             } else if (country[0] == "China") {
                 days = arrayData[i].slice(4, arrayData[i].length);
 				for (var j = 0; j < cn.length; j++) {
@@ -221,6 +226,7 @@ function continue_visualization(country_totals) {
 		de = de[0].map((col, i) => de.map(row => row[i]));
 		es = es[0].map((col, i) => es.map(row => row[i]));
 	        be = be[0].map((col, i) => be.map(row => row[i]));
+	        sa = sa[0].map((col, i) => sa.map(row => row[i]));
 		
 		
 		//document.getElementById("container").innerHTML = fr_n;
@@ -321,6 +327,9 @@ function continue_visualization(country_totals) {
                    break;
                case 'de':
 				   drawCanvas(de, options_line);				   
+                   break;
+	       case 'sa':
+				   drawCanvas(sa, options_line);				   
                    break;
 	       case 'be':
 		   drawCanvas(be, options_line);				   
