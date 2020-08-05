@@ -89,6 +89,7 @@ function continue_visualization(country_totals) {
 		var fi = [];
 		var de = [];
 		var es = [];
+	    	var sa = [];
 		var totalInfected = 0.00;
 		var totalInfectedYesterday = 0.00;
 
@@ -111,6 +112,7 @@ function continue_visualization(country_totals) {
                 it.push(country.concat(days));
                 fr_n.push(country.concat(days));
 		be.push(country.concat(days));
+		sa.push(country.concat(days));
 				cn_n.push(country.concat(days));
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
@@ -142,7 +144,10 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Korea, South") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 sk.push(country.concat(days));
-            } else if (country[0] == "Japan") {
+            } else if (country[0] == "South Africa") {
+                days = arrayData[i].slice(4, arrayData[i].length);
+                sa.push(country.concat(days));
+            }  else if (country[0] == "Japan") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 jp.push(country.concat(days));
             } else if (country[0] == "Denmark") {
@@ -217,6 +222,7 @@ function continue_visualization(country_totals) {
 		de = de[0].map((col, i) => de.map(row => row[i]));
 		es = es[0].map((col, i) => es.map(row => row[i]));
 	        be = be[0].map((col, i) => be.map(row => row[i]));
+	    sa = sa[0].map((col, i) => sa.map(row => row[i]));
 		
 		
 		//document.getElementById("container").innerHTML = fr_n;
@@ -318,6 +324,9 @@ function continue_visualization(country_totals) {
                case 'de':
 				   drawCanvas(de, options_line);				   
                    break;
+	  	case 'sa':
+			 drawCanvas(sa, options_line);
+			   break;
 	       case 'be':
 		   drawCanvas(be, options_line);				   
                    break;
