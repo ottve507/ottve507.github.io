@@ -89,6 +89,7 @@ function continue_visualization(country_totals) {
 		var fi = [];
 		var de = [];
 		var es = [];
+	    	var uk = [];
 	    	var sa = [];
 		var totalInfected = 0.00;
 		var totalInfectedYesterday = 0.00;
@@ -113,6 +114,7 @@ function continue_visualization(country_totals) {
                 fr_n.push(country.concat(days));
 		be.push(country.concat(days));
 		sa.push(country.concat(days));
+		uk.push(country.concat(days));
 				cn_n.push(country.concat(days));
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
@@ -173,6 +175,9 @@ function continue_visualization(country_totals) {
             } else if (country[0] == "Spain") {
                 days = arrayData[i].slice(4, arrayData[i].length);
                 es.push(country.concat(days));
+            } else if (country[0] == "United Kingdom") {
+                days = arrayData[i].slice(4, arrayData[i].length);
+                uk.push(country.concat(days));
             }
 			
 
@@ -223,6 +228,7 @@ function continue_visualization(country_totals) {
 		es = es[0].map((col, i) => es.map(row => row[i]));
 	        be = be[0].map((col, i) => be.map(row => row[i]));
 	    sa = sa[0].map((col, i) => sa.map(row => row[i]));
+	    uk = uk[0].map((col, i) => uk.map(row => row[i]));
 		
 		
 		//document.getElementById("container").innerHTML = fr_n;
@@ -323,6 +329,9 @@ function continue_visualization(country_totals) {
                    break;
                case 'de':
 				   drawCanvas(de, options_line);				   
+                   break;
+		case 'uk':
+				   drawCanvas(uk, options_line);				   
                    break;
 	  	case 'sa':
 			 drawCanvas(sa, options_line);
