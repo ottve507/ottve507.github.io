@@ -89,7 +89,8 @@ function continue_visualization(country_totals) {
 		var fi = [];
 		var de = [];
 		var es = [];
-	    	var uk = [];
+	    	var uk = new Array(arrayData[0].length-3).fill(0);
+	    	var uk_n = [];
 	    	var sa = [];
 		var totalInfected = 0.00;
 		var totalInfectedYesterday = 0.00;
@@ -114,7 +115,7 @@ function continue_visualization(country_totals) {
                 fr_n.push(country.concat(days));
 		be.push(country.concat(days));
 		sa.push(country.concat(days));
-		uk.push(country.concat(days));
+		uk_n.push(country.concat(days));
 				cn_n.push(country.concat(days));
 				us_n.push(country.concat(days));
 				sk.push(country.concat(days));
@@ -177,7 +178,9 @@ function continue_visualization(country_totals) {
                 es.push(country.concat(days));
             } else if (country[0] == "United Kingdom") {
                 days = arrayData[i].slice(4, arrayData[i].length);
-                uk.push(country.concat(days));
+				for (var j = 0; j < dk.length; j++) {
+					uk[j] = uk[j] + days[j];
+				}
             }
 			
 
@@ -208,6 +211,7 @@ function continue_visualization(country_totals) {
 		us_n.push(["US"].concat(us));
 		fr_n.push(["France"].concat(fr));
 		dk_n.push(["Denmark"].concat(dk));
+	    	uk_n.push(["United Kingdom"].concat(uk));
 		
 		all.push(["France"].concat(fr));
         
@@ -228,7 +232,7 @@ function continue_visualization(country_totals) {
 		es = es[0].map((col, i) => es.map(row => row[i]));
 	        be = be[0].map((col, i) => be.map(row => row[i]));
 	    sa = sa[0].map((col, i) => sa.map(row => row[i]));
-	    uk = uk[0].map((col, i) => uk.map(row => row[i]));
+	    uk_n = uk[0].map((col, i) => uk_n.map(row => row[i]));
 		
 		
 		//document.getElementById("container").innerHTML = fr_n;
@@ -331,7 +335,7 @@ function continue_visualization(country_totals) {
 				   drawCanvas(de, options_line);				   
                    break;
 		case 'uk':
-				   drawCanvas(uk, options_line);				   
+				   drawCanvas(uk_n, options_line);				   
                    break;
 	  	case 'sa':
 			 drawCanvas(sa, options_line);
