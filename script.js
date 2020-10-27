@@ -232,7 +232,7 @@ function continue_visualization(country_totals) {
 		es = es[0].map((col, i) => es.map(row => row[i]));
 	        be = be[0].map((col, i) => be.map(row => row[i]));
 	    sa = sa[0].map((col, i) => sa.map(row => row[i]));
-	    uk_n = uk[0].map((col, i) => uk_n.map(row => row[i]));
+	    uk_n = uk_n[0].map((col, i) => uk_n.map(row => row[i]));
 		
 		
 		//document.getElementById("container").innerHTML = fr_n;
