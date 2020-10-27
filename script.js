@@ -178,7 +178,7 @@ function continue_visualization(country_totals) {
                 es.push(country.concat(days));
             } else if (country[0] == "United Kingdom") {
                 days = arrayData[i].slice(4, arrayData[i].length);
-				for (var j = 0; j < dk.length; j++) {
+				for (var j = 0; j < uk.length; j++) {
 					uk[j] = uk[j] + days[j];
 				}
             }
