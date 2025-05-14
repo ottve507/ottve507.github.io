@@ -1,116 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
- 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-159948889-1"></script>
- 	<script>
-  	 window.dataLayer = window.dataLayer || [];
-  	 function gtag(){dataLayer.push(arguments);}
-  	 gtag('js', new Date());
-
-  	 gtag('config', 'UA-159948889-1');
- 	</script>
-	
-	
-   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-   <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
-   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-   <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-   
-
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/jquery.dataTables.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/js/dataTables.bootstrap.min.js"></script>
-   
-   
-   <script type="text/javascript" src="draw-canvas.js"></script>
-   <script type="text/javascript" src="script.js"></script>
-   <script type="text/javascript" src="sort-table.js"></script>
-   <script type="text/javascript" src="number_formatting.js"></script>
-   
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climbing Data Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- FingerprintJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js"></script>
 </head>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style ="background-color:white; border-style: solid;
-  border-color: gray;">
-		<center><h1>Corona development dashboard</h1>
-          <a class="dropdown-item" href="index.html">Infected</a> &nbsp &nbsp &nbsp
-          <a class="dropdown-item" href="deaths.html">Deaths</a>
-		</center>
-</nav>
-
-<body style="background-color:rgb(240,240,245);">
-   <center>
-	  <h3 style="color:rgb(100,100,100);">Data provided from <a href="https://github.com/CSSEGISandData/COVID-19">John Hopkins</a>. Data updated once per day.</h3>
-   </center>
-   <div id="container" style="padding:50px;">
-      
-	  <div class="row">
-         <div class="panel panel-default">
-            <center>
-               <h2> Number of infected</h2>
- 			  	<p id="totalNumbers" style ="white-space: nowrap;"></p>
-			   
-			   
-			   
-			   
-               <div id="canvas" style="width: 85%; height: 300px;"></div>
-			   <div id="growth-factor"></div><div id="learn-more"></div>
-			   
-               <br>
-					  <select id="mySelect">
-					    <option name="country" value="all">Favorites</option>
-						<option name="country" value="be">Belgium</option>
-						<option name="country" value="cn_n">China</option>
-						  
-						<option name="country" value="dk">Denmark</option>
-						<option name="country" value="fi">Finland</option>
-						<option name="country" value="fr">France</option>
-						  <option name="country" value="de">Germany</option>
-						<option name="country" value="it">Italy</option>
-						<option name="country" value="jp">Japan</option>
-						<option name="country" value="no">Norway</option>
-						<option name="country" value="sa">South Africa</option>
-						<option name="country" value="sk">South Korea</option>
-						<option name="country" value="es">Spain</option>
-						<option name="country" value="se">Sweden</option>
-						<option name="country" value="ch">Switzerland</option>
-						<option name="country" value="uk">United Kingdom</option>
-						<option name="country" value="us_n">United States</option>
-					  </select>
-            </center>
-			<br>
-         </div>
-      </div>
-	  
-      <div class="row">
-         <div class="panel panel-default">
-            <center>
-               <h2>World overview</h2>
-               <br>
-               <div id="regions_div" style="width: 900px; height: 500px;"></div>
-            </center>
-         </div>
-      </div>
-      <div class="row">
-		  <div class="panel panel-default">
-			  <table id="indextable" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-				  <thead>
-					  <tr>
-					  <th><a href="javascript:SortTable(0,'T');">Country ▼</a></th>
-					  <th><a href="javascript:SortTable(1,'N');">Population ▼</a></th>
-					  <th><a href="javascript:SortTable(2,'N');">Cases ▼</a></th>
-					  <th><a href="javascript:SortTable(3,'N');">Cases per 100 000 inhabitants ▼</a></th>
-				  	  </tr>
-				  </thead>
-				  <tbody>
-				  </tbody>
-			  </table>
-		  </div>
-      </div>
-</div>
-   
-   
-   
-   
-   
+<body>
+  <h1>Climbing Data Tracker</h1>
+  <div id="app">
+    <!-- Forms and data display will be injected here -->
+  </div>
+  <script src="js/script.js"></script>
 </body>
+</html>
