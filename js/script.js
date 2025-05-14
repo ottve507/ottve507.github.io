@@ -1,119 +1,77 @@
-// --- Constants & Config ---
-const BOULDER_GRADES = ["5","5+","6A","6A+","6B","6B+","6C","6C+","7A","7A+","7B","7B+","7C","7C+","8A","8A+","8B","8B+","8C","8C+","9A"];
-const SPORT_GRADES   = ["5a","5b","5c","6a","6a+","6b","6b+","6c","6c+","7a","7a+","7b","7b+","7c","7c+","8a","8a+","8b","8b+","8c","8c+","9a","9a+","9b","9b+","9c"];
-// URL of your deployed Google Apps Script Web App
-const SHEET_API_URL  = 'https://script.google.com/macros/s/AKfycbypL3yFpxOPqW-BxakWf4SZuFdipFMvZA7civrqZGEcQR2Cg-o6CFIijkWxIYGBXK6R/exec';  // e.g. https://script.google.com/macros/s/XXX/exec
+// Replace with your actual spreadsheet ID
+const SPREADSHEET_ID = '1YuEF_iRlK0_MwwwIMwB6gqU6xAx0DSu3_Dd5ZlmF1xQ';
+const SHEET_NAME = 'main_sheet';
 
-let fingerprint;
-let userRecord;
-
-// --- Initialize Fingerprint and Data Fetch ---
-FingerprintJS.load()
-  .then(fp => fp.get())
-  .then(result => {
-    fingerprint = result.visitorId;
-    fetchData();
-  });
-
-// Fetch all records from Sheets and find current user
-async function fetchData() {
-  const res = await fetch(`${SHEET_API_URL}?action=getAll&sheet=main_sheet`);
-  const all = await res.json();         // expects [{ id, grades, weight, duration }, ...]
-  userRecord = all.find(r => r.id === fingerprint);
-  if (userRecord) renderData(userRecord);
-  else renderForm1();
+// Utility to get the sheet
+function getSheet() {
+  return SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
 }
 
-// --- Forms Rendering ---
-function renderForm1() {
-  document.getElementById('app').innerHTML = `
-    <form id="form1">
-      <h2>Grades</h2>
-      <label>Bouldering redpoint:</label>
-      <select name="boulder_red">${BOULDER_GRADES.map(g=>`<option>${g}</option>`).join('')}</select>
-      <label>Lead redpoint:</label>
-      <select name="lead_red">${SPORT_GRADES.map(g=>`<option>${g}</option>`).join('')}</select>
-      <label>Bouldering onsight:</label>
-      <select name="boulder_on">${BOULDER_GRADES.map(g=>`<option>${g}</option>`).join('')}</select>
-      <label>Lead onsight:</label>
-      <select name="lead_on">${SPORT_GRADES.map(g=>`<option>${g}</option>`).join('')}</select>
-      <button type="submit">Next</button>
-    </form>
-  `;
-  document.getElementById('form1').onsubmit = e => {
-    e.preventDefault();
-    sessionStorage.setItem('grades', JSON.stringify(Object.fromEntries(new FormData(e.target))));
-    renderForm2();
-  };
+// Common headers for CORS and JSON output
+function buildResponse(data) {
+  return ContentService
+    .createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
-function renderForm2() {
-  document.getElementById('app').innerHTML = `
-    <form id="form2">
-      <h2>Hangboard Weight (% added)</h2>
-      <input type="number" name="weight_pct" min="0" required>
-      <button type="submit">Next</button>
-    </form>
-  `;
-  document.getElementById('form2').onsubmit = e => {
-    e.preventDefault();
-    sessionStorage.setItem('weight', JSON.stringify(Object.fromEntries(new FormData(e.target))));
-    renderForm3();
-  };
+// Handle preflight OPTIONS request
+function doOptions(e) {
+  return buildResponse({});
 }
 
-function renderForm3() {
-  document.getElementById('app').innerHTML = `
-    <form id="form3">
-      <h2>Hang Duration (s)</h2>
-      <input type="number" name="hang_sec" min="1" required>
-      <button type="submit">Submit</button>
-    </form>
-  `;
-  document.getElementById('form3').onsubmit = e => {
-    e.preventDefault();
-    sessionStorage.setItem('duration', JSON.stringify(Object.fromEntries(new FormData(e.target))));
-    saveUserData();
-  };
+// Handle GET requests (only getAll supported here)
+function doGet(e) {
+  const action = e.parameter.action;
+  if (action === 'getAll') {
+    const sheet = getSheet();
+    const rows = sheet.getDataRange().getValues();
+    const headers = rows.shift();
+    const data = rows.map(r => headers.reduce((obj, h, i) => (obj[h] = r[i], obj), {}));
+    return buildResponse(data);
+  }
+  return buildResponse({ error: 'Invalid GET action' });
 }
 
-// --- CRUD Operations ---
-async function saveUserData() {
-  const record = {
-    id: fingerprint,
-    grades: JSON.parse(sessionStorage.getItem('grades')),
-    weight: JSON.parse(sessionStorage.getItem('weight')),
-    duration: JSON.parse(sessionStorage.getItem('duration'))
-  };
-  const action = userRecord ? 'update' : 'add';
-  const res = await fetch(SHEET_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, sheet: 'main_sheet', record })
-  });
-  const updated = await res.json();  // expects the up-to-date record
-  userRecord = updated;
-  renderData(userRecord);
-}
+// Handle POST requests for add/update/delete
+function doPost(e) {
+  const params = JSON.parse(e.postData.contents);
+  const action = params.action;
+  const sheet = getSheet();
+  const rows = sheet.getDataRange().getValues();
+  const headers = rows[0];
 
-async function deleteUserData() {
-  await fetch(SHEET_API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'delete', sheet: 'main_sheet', id: fingerprint })
-  });
-  userRecord = null;
-  renderForm1();
-}
+  if (action === 'add') {
+    // Append new record
+    const record = params.record;
+    const values = headers.map(h => JSON.stringify(record[h] || ''));
+    sheet.appendRow(values.map(v => JSON.parse(v)));
+    return buildResponse(record);
+  }
 
-// --- Display & Edit/Delete ---
-function renderData(r) {
-  document.getElementById('app').innerHTML = `
-    <h2>Your Data</h2>
-    <pre>${JSON.stringify(r, null,2)}</pre>
-    <button id="edit">Edit</button>
-    <button id="delete">Delete</button>
-  `;
-  document.getElementById('edit').onclick   = () => { userRecord = null; renderForm1(); };
-  document.getElementById('delete').onclick = deleteUserData;
+  // Find existing row by id
+  const idCol = headers.indexOf('id');
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][idCol] === params.record.id) {
+      const rowIndex = i + 1;
+      if (action === 'update') {
+        // Overwrite each column
+        headers.forEach((h, j) => {
+          const val = params.record[h];
+          sheet.getRange(rowIndex, j + 1).setValue(
+            typeof val === 'object' ? JSON.stringify(val) : val
+          );
+        });
+        return buildResponse(params.record);
+      }
+      if (action === 'delete') {
+        sheet.deleteRow(rowIndex);
+        return buildResponse({ id: params.record.id, deleted: true });
+      }
+    }
+  }
+
+  return buildResponse({ error: 'Record not found for ' + action });
 }
