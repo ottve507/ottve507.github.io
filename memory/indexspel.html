@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 150px); /* Increased size by 50% */
+            grid-gap: 10px;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .card {
+            width: 150px; /* Increased size by 50% */
+            height: 150px; /* Increased size by 50% */
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .hidden {
+            background-size: cover;
+        }
+        .blink {
+            animation: blink 0.5s 3;
+        }
+        @keyframes blink {
+            50% { background-color: black; }
+        }
+        .score-blink {
+            animation: scoreBlink 0.5s 2;
+        }
+        @keyframes scoreBlink {
+            50% { color: red; }
+        }
+        .match-blink {
+            animation: invertBlink 0.5s 2;
+        }
+        @keyframes invertBlink {
+            50% { filter: invert(1); }
+        }
+        .no-match-grow {
+            animation: growShrink 0.5s 2;
+        }
+        @keyframes growShrink {
+            50% { transform: scale(2); }
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Game</h1>
+    <p>Press a letter (a-l) to flip a card</p>
+    <div class="grid" id="gameBoard"></div>
+    <p>Score: <span id="score">0</span></p>
+
+    <script>
+    const letters = 'ABCDEFGHIJKL';
+    const baseImages = ['1.jpeg', '2.jpeg', '3.jpeg', '4.jpeg', '5.jpeg', '6.jpeg']; // immutable
+    let deck = [];           // cards for the current round
+    let selectedCards = [];
+    let matchedPairs = 0;
+    let totalPairs = 0;
+
+    const board = document.getElementById('gameBoard');
+    const scoreDisplay = document.getElementById('score');
+
+    function initializeGame() {
+        // Clear board
+        while (board.firstChild) board.removeChild(board.firstChild);
+
+        // Build a fresh deck from the immutable base
+        deck = [...baseImages, ...baseImages];
+        deck.sort(() => Math.random() - 0.5);
+
+        matchedPairs = 0;
+        totalPairs = baseImages.length;   // fixed pair count per round
+        scoreDisplay.textContent = 0;
+        selectedCards = [];
+
+        deck.forEach((image, index) => {
+            const div = document.createElement('div');
+            div.classList.add('card');
+            div.dataset.index = index;
+            div.dataset.image = image;
+            div.textContent = letters[index % letters.length];
+            board.appendChild(div);
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        const key = event.key.toUpperCase();
+        const index = letters.indexOf(key);
+        // Only handle A–L keys and at most 2 selections
+        if (index !== -1 && selectedCards.length < 2) flipCard(index);
+    });
+
+    function flipCard(index) {
+        const cards = document.querySelectorAll('.card');
+        const card = cards[index];
+        if (!card || card.classList.contains('hidden') || selectedCards.includes(card)) return;
+
+        card.style.backgroundImage = `url(${card.dataset.image})`;
+        card.textContent = '';
+        card.classList.add('hidden');
+        selectedCards.push(card);
+
+        if (selectedCards.length === 2) {
+            setTimeout(checkMatch, 1000);
+        }
+    }
+
+    function checkMatch() {
+        const [card1, card2] = selectedCards;
+        if (card1.dataset.image === card2.dataset.image) {
+            matchedPairs++;
+            scoreDisplay.textContent = matchedPairs;
+            scoreDisplay.classList.add('score-blink');
+            card1.classList.add('match-blink');
+            card2.classList.add('match-blink');
+            setTimeout(() => {
+                card1.classList.remove('match-blink');
+                card2.classList.remove('match-blink');
+                scoreDisplay.classList.remove('score-blink');
+            }, 1000);
+        } else {
+            card1.classList.add('no-match-grow');
+            card2.classList.add('no-match-grow');
+            setTimeout(() => {
+                card1.style.backgroundImage = '';
+                card1.textContent = letters[Array.from(board.children).indexOf(card1) % letters.length];
+                card1.classList.remove('hidden', 'no-match-grow');
+                card2.style.backgroundImage = '';
+                card2.textContent = letters[Array.from(board.children).indexOf(card2) % letters.length];
+                card2.classList.remove('hidden', 'no-match-grow');
+            }, 1000);
+        }
+        selectedCards = [];
+
+        // Use totalPairs (or deck.length / 2) so it doesn't grow between rounds
+        if (matchedPairs === totalPairs) {
+            setTimeout(() => {
+                board.style.transition = 'opacity 1s';
+                board.style.opacity = 0;
+                setTimeout(() => {
+                    board.style.opacity = 1;
+                    initializeGame();
+                }, 1000);
+            }, 1000);
+        }
+    }
+
+    initializeGame();
+</script>
+
+</body>
+</html>
