@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katträknaren</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif;
+          margin: 0;
+          padding-top: 50px; /* Add space equal to the menu bar's height */
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            max-width: 600px; /* Centered container with max width */
+            margin: 20px auto;
+        }
+        .cat-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
+            flex-basis: calc(33.33% - 20px); /* Limit to 3 per row with spacing */
+            max-width: 150px;
+        }
+        .cat {
+            width: 120px; /* Increase cat image size */
+            height: 120px;
+            transition: filter 0.5s ease;
+        }
+        .inverted { filter: invert(1); }
+        .cat-number {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .cat-number.show { display: block; } /* Shows number during animation */
+        #startButton { padding: 10px 20px; font-size: 18px; cursor: pointer; margin-top: 20px; }
+        /* Styling for the menu bar */
+        .menu-bar {
+            background-color: #f0f0f0; /* Light gray background */
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: fixed; /* Fix the bar at the top */
+            top: 0; /* Position it at the very top of the page */
+            left: 0;
+            width: 100%; /* Make it stretch across the full width */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        /* Styling for the menu button */
+        .menu-bar button {
+            background-color: magenta; /* Magenta button color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for the button */
+        .menu-bar button:hover {
+            background-color: darkmagenta; /* Darker shade of magenta */
+        }
+
+
+    </style>
+
+
+    </style>
+</head>
+<body>
+  <div class="menu-bar">
+        <!-- Menu button labeled "Hem" linking to a parent folder -->
+        <button onclick="window.location.href='../index.html'">Hem</button>
+    </div>
+    <div>
+
+    <center>
+
+    <h1>Hur många katter</h1>
+    <button id="startButton">Starta spelet</button>
+    <div id="container" class="container"></div>
+
+    <!-- Sound elements for each m4a file -->
+    <audio id="startSound" src="res/start.m4a"></audio>
+    <audio id="sound1" src="res/1.m4a"></audio>
+    <audio id="sound2" src="res/2.m4a"></audio>
+    <audio id="sound3" src="res/3.m4a"></audio>
+    <audio id="sound4" src="res/4.m4a"></audio>
+    <audio id="sound5" src="res/5.m4a"></audio>
+    <audio id="sound6" src="res/6.m4a"></audio>
+    <audio id="sound7" src="res/7.m4a"></audio>
+    <audio id="sound8" src="res/8.m4a"></audio>
+    <audio id="sound9" src="res/9.m4a"></audio>
+    <audio id="kattSound" src="res/katt.m4a"></audio>
+    <audio id="katterSound" src="res/katter.m4a"></audio>
+
+    <script>
+        const container = document.getElementById("container");
+        const startButton = document.getElementById("startButton");
+        let numberOfCats;
+        let animationInProgress = false; // Flag to track if animation is in progress
+
+        // Function to generate a random number of cats
+        function generateCats() {
+            container.innerHTML = ""; // Clear previous images
+            numberOfCats = Math.floor(Math.random() * 9) + 1; // Random number between 1 and 9
+            for (let i = 0; i < numberOfCats; i++) {
+                // Create a wrapper for each cat and its number
+                const catWrapper = document.createElement("div");
+                catWrapper.classList.add("cat-wrapper");
+
+                // Create the cat image
+                const cat = document.createElement("img");
+                cat.src = "res/cat.png";
+                cat.classList.add("cat");
+
+                // Create the number element
+                const catNumber = document.createElement("div");
+                catNumber.classList.add("cat-number");
+                catNumber.innerText = i + 1; // Display the cat's sequence number
+
+                // Append cat and number to wrapper
+                catWrapper.appendChild(cat);
+                catWrapper.appendChild(catNumber);
+                container.appendChild(catWrapper);
+            }
+
+            // Play the start sound at the beginning of each round
+            document.getElementById("startSound").play();
+        }
+
+        // Function to play sound and animate images
+        function playSoundAndAnimate(index) {
+            if (index < numberOfCats) {
+                const catImages = document.querySelectorAll(".cat");
+                const catNumbers = document.querySelectorAll(".cat-number");
+
+                // Invert the cat image and show the number
+                catImages[index].classList.add("inverted");
+                catNumbers[index].classList.add("show");
+
+                const sound = document.getElementById(`sound${index + 1}`);
+                sound.play();
+
+                // Move to the next animation step only after the current sound ends
+                sound.onended = () => playSoundAndAnimate(index + 1);
+            } else {
+                // After the animation, play the last sound
+                const lastSound = document.getElementById(`sound${numberOfCats}`);
+                lastSound.play();
+
+                // Wait for the last sound to finish, then play katt or katter sound
+                lastSound.onended = () => {
+                    const finalSound = numberOfCats === 1 ? document.getElementById("kattSound") : document.getElementById("katterSound");
+                    finalSound.play();
+
+                    // After the final sound, reset animation flag and start a new round
+                    finalSound.onended = () => {
+                        animationInProgress = false;
+                        setTimeout(generateCats, 2000); // Start the new round after a brief delay
+                    };
+                };
+            }
+        }
+
+        // Listen for key presses
+        document.addEventListener("keydown", (event) => {
+            const key = parseInt(event.key);
+            if (!animationInProgress && key === numberOfCats) {
+                animationInProgress = true; // Set the flag to prevent further triggers
+                playSoundAndAnimate(0); // Start the animation and sound sequence if correct
+            }
+        });
+
+        // Start the game when the Start button is clicked
+        startButton.addEventListener("click", () => {
+            startButton.style.display = "none"; // Hide the start button after clicking
+            animationInProgress = false; // Ensure flag is reset when game first starts
+            generateCats(); // Start the game
+        });
+    </script>
+  </center>
+</div>
+</body>
+</html>

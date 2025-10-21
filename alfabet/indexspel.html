@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Show</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding-top: 50px; /* Add space equal to the menu bar's height */
+        }
+        #letter {
+            font-size: 10em;
+            margin-bottom: 20px;
+        }
+        #image {
+            height: 600px;
+        }
+        #startButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        /* Styling for the menu bar */
+        .menu-bar {
+            background-color: #f0f0f0; /* Light gray background */
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: fixed; /* Fix the bar at the top */
+            top: 0; /* Position it at the very top of the page */
+            left: 0;
+            width: 100%; /* Make it stretch across the full width */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            z-index: 1000; /* Ensure it appears above other elements */
+        }
+
+        /* Styling for the menu button */
+        .menu-bar button {
+            background-color: magenta; /* Magenta button color */
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for the button */
+        .menu-bar button:hover {
+            background-color: darkmagenta; /* Darker shade of magenta */
+        }
+
+
+    </style>
+</head>
+<body>
+  <center>
+  <div class="menu-bar">
+        <!-- Menu button labeled "Hem" linking to a parent folder -->
+        <button onclick="window.location.href='../index.html'">Hem</button>
+    </div>
+    <div>
+    <button id="startButton">Starta spelet</button>
+    <div id="letter" style="display: none;">A</div>
+    <img id="image" src="A.jpeg" alt="Image related to A" style="display: none;">
+    <script>
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split("");
+        let currentIndex = 0;
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('letter').style.display = 'block';
+            document.getElementById('image').style.display = 'block';
+            showLetter();
+        });
+
+        function showLetter() {
+            const letter = letters[currentIndex];
+            document.getElementById("letter").textContent = letter;
+            document.getElementById("image").src = `${letter}.jpeg`;
+            playSound(letter);
+        }
+
+        function playSound(letter) {
+            const audio = new Audio(`${letter}.m4a`);
+            audio.play().catch(error => {
+                console.error(`Error playing sound for ${letter}:`, error);
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            const keyPressed = event.key.toUpperCase();
+            if (keyPressed === letters[currentIndex]) {
+                currentIndex = (currentIndex + 1) % letters.length;
+                showLetter();
+            }
+        });
+    </script>
+  </div>
+</center>
+</body>
+</html>
