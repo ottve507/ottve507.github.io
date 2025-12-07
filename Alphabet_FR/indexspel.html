@@ -74,39 +74,40 @@
     <div id="letter" style="display: none;">A</div>
     <img id="image" src="A.jpeg" alt="Image related to A" style="display: none;">
     <script>
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-        let currentIndex = 0;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split("");
+    let currentIndex = 0;
 
-        document.getElementById('startButton').addEventListener('click', () => {
-            document.getElementById('startButton').style.display = 'none';
-            document.getElementById('letter').style.display = 'block';
-            document.getElementById('image').style.display = 'block';
+    document.getElementById('startButton').addEventListener('click', () => {
+        document.getElementById('startButton').style.display = 'none';
+        document.getElementById('letter').style.display = 'block';
+        document.getElementById('image').style.display = 'block';
+        showLetter();
+    });
+
+    function showLetter() {
+        const letter = letters[currentIndex];
+        document.getElementById("letter").textContent = `${letter} ${letter.toLowerCase()}`;
+        document.getElementById("image").src = `${letter}.jpeg`;
+        playSound(letter);
+    }
+
+    function playSound(letter) {
+        const audio = new Audio(`${letter}.m4a`);
+        audio.play().catch(error => {
+            console.error(`Error playing sound for ${letter}:`, error);
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        const keyPressed = event.key.toUpperCase();
+        if (keyPressed === letters[currentIndex]) {
+            currentIndex = (currentIndex + 1) % letters.length;
             showLetter();
-        });
-
-        function showLetter() {
-            const letter = letters[currentIndex];
-            document.getElementById("letter").textContent = letter;
-            document.getElementById("image").src = `${letter}.jpeg`;
-            playSound(letter);
         }
-
-        function playSound(letter) {
-            const audio = new Audio(`${letter}.m4a`);
-            audio.play().catch(error => {
-                console.error(`Error playing sound for ${letter}:`, error);
-            });
-        }
-
-        document.addEventListener('keydown', (event) => {
-            const keyPressed = event.key.toUpperCase();
-            if (keyPressed === letters[currentIndex]) {
-                currentIndex = (currentIndex + 1) % letters.length;
-                showLetter();
-            }
-        });
-    </script>
+    });
+</script>
   </div>
 </center>
 </body>
 </html>
+
